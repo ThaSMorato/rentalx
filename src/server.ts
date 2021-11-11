@@ -1,6 +1,6 @@
 import express from "express";
 
-import { categoriesRoutes } from "./routes/cateories.routes";
+import { router } from "./routes";
 
 const PORT = 3333;
 
@@ -8,6 +8,6 @@ const app = express();
 
 app.use(express.json());
 
-app.use("/categories", categoriesRoutes);
+app.use(router);
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`));
