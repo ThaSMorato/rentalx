@@ -1,10 +1,12 @@
 import express from "express";
+import "reflect-metadata";
 import swaggerUI from "swagger-ui-express";
 
 import { router } from "./routes";
 import swaggerFile from "./swagger.json";
 
 import "./database";
+import "./shared/container";
 
 const PORT = 3333;
 

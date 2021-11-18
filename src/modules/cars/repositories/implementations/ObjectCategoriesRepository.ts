@@ -9,19 +9,8 @@ const categories = [];
 export class CategoriesRepository implements ICategoriesRepository {
   private categories: Category[];
 
-  // eslint-disable-next-line no-use-before-define
-  private static INSTANCE: CategoriesRepository;
-
-  private constructor() {
+  constructor() {
     this.categories = categories;
-  }
-
-  public static getInstance(): CategoriesRepository {
-    if (!CategoriesRepository.INSTANCE) {
-      CategoriesRepository.INSTANCE = new CategoriesRepository();
-    }
-
-    return CategoriesRepository.INSTANCE;
   }
 
   create({ name, description }: ICreateCategoriesDTO): Promise<void> {
@@ -35,6 +24,7 @@ export class CategoriesRepository implements ICategoriesRepository {
       });
 
       this.categories.push(category);
+      resolve();
     });
   }
 
