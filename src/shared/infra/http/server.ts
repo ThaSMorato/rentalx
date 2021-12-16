@@ -4,13 +4,14 @@ import "reflect-metadata";
 import "dotenv/config";
 import swaggerUI from "swagger-ui-express";
 
-import "../typeorm";
 import "../../container";
 
 import swaggerFile from "../../../swagger.json";
 import { AppError } from "../../errors/AppError";
+import createConnection from "../typeorm";
 import { router } from "./routes";
 
+createConnection();
 const PORT = 3333;
 
 const app = express();

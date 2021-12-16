@@ -41,11 +41,10 @@ describe("Authenticate User", () => {
     expect(async () => {
       await createUserUseCase.execute(user);
 
-      const result = await authentiacteUserUseCase.execute({
+      await authentiacteUserUseCase.execute({
         email: user.email,
         password: `not${user.password}`,
       });
-      expect(result).toHaveProperty("token");
     }).rejects.toBeInstanceOf(AppError);
   });
 });

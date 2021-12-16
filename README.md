@@ -11,13 +11,11 @@ RN => Regra de Negócio
 **RF**
 
 - Deve ser possível cadastrar um novo carro.
-- Deve ser possível listar todas as categorias.
 
 **RN**
 
-- O usuário responsável pelo cadastro deve ser admistrador.
+- \*O usuário responsável pelo cadastro deve ser admistrador.
 - Não deve ser possível cadastrar um carro com uma placa já existente.
-- Não deve ser possível alterar uma placa de um carro já cadastrado.
 - O carro deve ser cadastrado como disponivel por padrão.
 
 # Listagem de carros
@@ -38,8 +36,6 @@ RN => Regra de Negócio
 **RF**
 
 - Deve ser possível cadastrar uma especificação para um carro.
-- Deve ser possível listar todas as especificações.
-- Deve ser possível listar todos os carros.
 
 **RN**
 
