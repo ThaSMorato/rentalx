@@ -17,5 +17,13 @@ export default async (host = process.env.DB_HOST): Promise<Connection> => {
 
   console.log("connection created");
 
-  return createConnection(Object.assign(defaultoptions, { host }));
+  return createConnection(
+    Object.assign(defaultoptions, {
+      host: process.env.NODE_ENV === "test" ? "localhost" : host,
+      database:
+        process.env.NODE_ENV === "test"
+          ? "rentalx_test"
+          : defaultoptions.database,
+    })
+  );
 };
