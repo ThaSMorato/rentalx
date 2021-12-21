@@ -6,6 +6,10 @@ import { IDateProvider } from "../IDateProvider";
 dayjs.extend(utc);
 
 export class DayjsDateProvider implements IDateProvider {
+  getDateFromNow(days: number): Date {
+    return dayjs().add(days, "days").toDate();
+  }
+
   dateNow(): Date {
     return dayjs().toDate();
   }

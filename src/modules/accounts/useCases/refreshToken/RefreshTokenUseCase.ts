@@ -1,5 +1,4 @@
-import { compare } from "bcrypt";
-import { sign } from "jsonwebtoken";
+import { verify, sign } from "jsonwebtoken";
 import { inject, injectable } from "tsyringe";
 
 import { authConfig } from "../../../../config/auth";
@@ -8,22 +7,18 @@ import { AppError } from "../../../../shared/errors/AppError";
 import { IUserRepository } from "../../repositories/IUserRepository";
 import { IUsersTokensRepository } from "../../repositories/IUsersTokensRepository";
 
-interface IRequest {
+interface IPayload {
+  sub: string;
   email: string;
-  password: string;
 }
 
 interface IResponse {
   token: string;
   refresh_token: string;
-  user: {
-    name: string;
-    email: string;
-  };
 }
 
 @injectable()
-export class AuthenticateUserUseCase {
+export class RefreshTokenUseCase {
   constructor(
     @inject("UserRepository")
     private userRepository: IUserRepository,
@@ -33,15 +28,7 @@ export class AuthenticateUserUseCase {
     private dateProvider: IDateProvider
   ) {}
 
-  async execute({ email, password }: IRequest): Promise<IResponse> {
-    const user = await this.userRepository.findByEmail(email);
-
-    if (!user) throw new AppError("Email or Password incorrect");
-
-    const isCorrectPassword = await compare(password, user.password);
-
-    if (!isCorrectPassword) throw new AppError("Email or Password incorrect");
-
+  async execute(token: string): Promise<IResponse> {
     const {
       expires_in_token,
       public_jwt_secret,
@@ -50,7 +37,25 @@ export class AuthenticateUserUseCase {
       expires_in_refresh_number,
     } = authConfig;
 
-    const token = sign(
+    const { sub: user_id, email } = verify(
+      token,
+      authConfig.public_refresh_secret
+    ) as IPayload;
+
+    const user_tokens = await this.usersTokensRepository.findByUserIdAndToken(
+      user_id,
+      token
+    );
+
+    if (!user_tokens) {
+      throw new AppError("Refresh token not found");
+    }
+
+    await this.usersTokensRepository.deleteById(user_tokens.id);
+
+    const user = await this.userRepository.findByEmail(email);
+
+    const user_token = sign(
       {
         email: user.email,
         name: user.name,
@@ -62,8 +67,8 @@ export class AuthenticateUserUseCase {
       }
     );
 
-    const refresh_token = sign({ email: user.email }, public_refresh_secret, {
-      subject: user.id,
+    const refresh_token = sign({ email }, public_refresh_secret, {
+      subject: user_id,
       expiresIn: expires_in_refresh,
     });
 
@@ -72,20 +77,14 @@ export class AuthenticateUserUseCase {
     );
 
     await this.usersTokensRepository.create({
-      user_id: user.id,
+      user_id,
       refresh_token,
       expires_date: refresh_expires_date,
     });
 
-    const tokenResponse: IResponse = {
-      user: {
-        email: user.email,
-        name: user.name,
-      },
-      token,
+    return {
+      token: user_token,
       refresh_token,
     };
-
-    return tokenResponse;
   }
 }

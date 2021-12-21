@@ -8,4 +8,5 @@ export interface IDateProvider {
   ): number;
   convertToUTC(date: Date): string;
   dateNow(): Date;
+  getDateFromNow(days: number): Date;
 }
