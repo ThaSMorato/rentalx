@@ -49,7 +49,9 @@
   "scripts": {
     "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules --respawn src/shared/infra/http/server.ts ",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli",
-    "test": "set NODE_ENV=test&& jest",
+    "test": "set NODE_ENV=test&& jest --runInBand --watch --detectOpenHandles",
+    "test:cov": "set NODE_ENV=test&& jest --detectOpenHandles --runInBand --coverage",
+    "test:e2e": "set NODE_ENV=test&& jest --detectOpenHandles src/__e2e__/app.spec.ts",
     "seed:admin": "ts-node-dev src/shared/infra/typeorm/seed/admin.ts",
     "migration:create": "yarn typeorm migration:create -n",
     "migration:run": "yarn typeorm migration:run",

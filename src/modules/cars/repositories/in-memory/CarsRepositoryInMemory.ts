@@ -5,6 +5,11 @@ import { ICarsRepository } from "../ICarsRepository";
 export class CarsRepositoryInMemory implements ICarsRepository {
   cars: Car[] = [];
 
+  async updateAvailability(id: string, available: boolean): Promise<void> {
+    const findIndex = this.cars.findIndex((c) => c.id === id);
+    this.cars[findIndex].available = available;
+  }
+
   async findByLicensePlate(license_plate: string): Promise<Car> {
     return this.cars.find((car) => car.license_plate === license_plate);
   }

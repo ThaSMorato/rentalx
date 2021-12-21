@@ -96,14 +96,14 @@ describe("App", () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
-      expect.arrayContaining(
+      expect.arrayContaining([
         expect.objectContaining({
           id: expect.any(String),
           name: expect.any(String),
           description: expect.any(String),
           created_at: expect.any(String),
-        })
-      )
+        }),
+      ])
     );
   });
 });
