@@ -8,5 +8,7 @@ export interface IDateProvider {
   ): number;
   convertToUTC(date: Date): string;
   dateNow(): Date;
-  getDateFromNow(days: number): Date;
+  getDateFromNowWithDays(days: number): Date;
+  getDateFromNowWithHours(hours: number): Date;
+  compareIfBefore(start_date: Date, end_date: Date): boolean;
 }

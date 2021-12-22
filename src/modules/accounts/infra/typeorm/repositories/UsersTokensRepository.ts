@@ -11,6 +11,11 @@ export class UsersTokensRepository implements IUsersTokensRepository {
     this.repository = getRepository(UserTokens);
   }
 
+  async findByToken(token: string): Promise<UserTokens> {
+    const user_token = await this.repository.findOne({ refresh_token: token });
+    return user_token;
+  }
+
   async create(create_token_data: ICreateUserTokenDTO): Promise<UserTokens> {
     const userToken = this.repository.create(create_token_data);
 

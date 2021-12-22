@@ -21,7 +21,7 @@ export class CreateRentalUseCase {
     private rentalsRepository: IRentalsRepository,
     @inject("DateProvider")
     private dateProvider: IDateProvider,
-    @inject("CarsRepositories")
+    @inject("CarsRepository")
     private carsRepository: ICarsRepository
   ) {}
 

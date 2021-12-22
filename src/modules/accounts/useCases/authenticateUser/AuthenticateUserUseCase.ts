@@ -67,7 +67,7 @@ export class AuthenticateUserUseCase {
       expiresIn: expires_in_refresh,
     });
 
-    const refresh_expires_date = this.dateProvider.getDateFromNow(
+    const refresh_expires_date = this.dateProvider.getDateFromNowWithDays(
       expires_in_refresh_number
     );
 

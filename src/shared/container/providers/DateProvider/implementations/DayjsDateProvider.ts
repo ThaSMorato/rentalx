@@ -6,7 +6,15 @@ import { IDateProvider } from "../IDateProvider";
 dayjs.extend(utc);
 
 export class DayjsDateProvider implements IDateProvider {
-  getDateFromNow(days: number): Date {
+  compareIfBefore(start_date: Date, end_date: Date): boolean {
+    return dayjs(start_date).isBefore(end_date);
+  }
+
+  getDateFromNowWithHours(hours: number): Date {
+    return dayjs().add(hours, "hours").toDate();
+  }
+
+  getDateFromNowWithDays(days: number): Date {
     return dayjs().add(days, "days").toDate();
   }
 
