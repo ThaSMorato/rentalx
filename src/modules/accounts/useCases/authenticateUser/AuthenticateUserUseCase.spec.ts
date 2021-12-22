@@ -1,12 +1,16 @@
+import { DayjsDateProvider } from "../../../../shared/container/providers/DateProvider/implementations/DayjsDateProvider";
 import { AppError } from "../../../../shared/errors/AppError";
 import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
 import { UserRepositoryInMemory } from "../../repositories/in-memory/UserRepositoryInMemory";
+import { UsersTokensRepositoryInMemory } from "../../repositories/in-memory/UsersTokensRepositoryInMemory";
 import { CreateUserUseCase } from "../createUser/createUserUseCase";
 import { AuthenticateUserUseCase } from "./AuthenticateUserUseCase";
 
 let authentiacteUserUseCase: AuthenticateUserUseCase;
 let usersRepository: UserRepositoryInMemory;
 let createUserUseCase: CreateUserUseCase;
+let usersTokensRepository: UsersTokensRepositoryInMemory;
+let dateProvider: DayjsDateProvider;
 
 const user: ICreateUserDTO = {
   driver_license: "00123",
@@ -15,12 +19,28 @@ const user: ICreateUserDTO = {
   password: "1234",
 };
 
+const OLD_ENV = process.env;
+
 describe("Authenticate User", () => {
+  beforeAll(() => {
+    process.env.JWT_PUBLIC_KEY = "JWT_PUBLIC_KEY";
+    process.env.REFRESH_PUBLIC_KEY = "REFRESH_PUBLIC_KEY";
+  });
+
   beforeEach(() => {
-    process.env.JWT_PUBLIC_KEY = "123123";
     usersRepository = new UserRepositoryInMemory();
-    authentiacteUserUseCase = new AuthenticateUserUseCase(usersRepository);
+    usersTokensRepository = new UsersTokensRepositoryInMemory();
+    dateProvider = new DayjsDateProvider();
+    authentiacteUserUseCase = new AuthenticateUserUseCase(
+      usersRepository,
+      usersTokensRepository,
+      dateProvider
+    );
     createUserUseCase = new CreateUserUseCase(usersRepository);
+  });
+
+  afterAll(() => {
+    process.env = OLD_ENV;
   });
 
   it("should be able to authenticate an existing user", async () => {
