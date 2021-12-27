@@ -3,3 +3,10 @@ dist
 tmp/**/*
 tmp/*
 .env
+ormconfig.json
+
+!tmp/.gitkeep
+!tmp/**/.gitkeep
+
+coverage
+ssh-connection
